@@ -1,0 +1,5 @@
+const x = color rgb 100 100 100
+const x = color red
+def myfunc(){ move f 100 }
+const x = lambda { move f 100 }
+def func(a, b) { move f a f b }

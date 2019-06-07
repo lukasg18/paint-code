@@ -1,20 +1,30 @@
-start: instruction+
+start: instruction
 
-instruction: movement
+instruction: action
             |code_block
             |loop
+            |clear
+            |function
+            |assign
             
     
 
-movement: "move" (DIRECTION NUMBER)+ | custom_color
-custom_color: "color" COLOR | rgb 
+action: movement | custom_color | custom_background
+movement: "move" (DIRECTION (NUMBER|NAME))+
+custom_color: "color" (COLOR | rgb)
+custom_background: "bg" (COLOR | rgb)
 rgb: "rgb" ("0".."9")~1..3 " " ("0".."9")~1..3 " " ("0".."9")~1..3 
 loop: "repeat" NUMBER code_block
 code_block: "{" instruction+ "}"
+assign: "const" NAME "=" (NUMBER | custom_color | lambda)
+lambda: "lambda" code_block
+function: "def" NAME "(" (NAME ("," NAME)* )* ")" code_block
+clear: "clear"
 
 COLOR: "red" | "green" | "blue" | "white" | "black"
 DIRECTION: "f"|"b"|"l"|"r"
 NUMBER: ("0".."9")+
+NAME: ("a".."z")+
 
 %import common.WS_INLINE
 %ignore WS_INLINE
