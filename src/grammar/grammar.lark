@@ -1,8 +1,20 @@
-expr: term (("+" | "-") term)*
-term: factor (("*" | "/" | "//" | "%") factor)*
-factor: base ("^" factor)?
-base: ("+" | "-") base | NUMBER | "(" expr ")"
+start: instruction+
 
-%import common.SIGNED_NUMBER -> NUMBER
+instruction: movement
+            |code_block
+            |loop
+            
+    
+
+movement: "move" (DIRECTION NUMBER)+ | custom_color
+custom_color: "color" COLOR | rgb 
+rgb: "rgb" ("0".."9")~1..3 " " ("0".."9")~1..3 " " ("0".."9")~1..3 
+loop: "repeat" NUMBER code_block
+code_block: "{" instruction+ "}"
+
+COLOR: "red" | "green" | "blue" | "white" | "black"
+DIRECTION: "f"|"b"|"l"|"r"
+NUMBER: ("0".."9")+
+
 %import common.WS_INLINE
 %ignore WS_INLINE
