@@ -59,16 +59,23 @@ class MEL():
     
     def run_loop(self, t):
         print("func run_loop")
+        count = 0
         for i in range(len(t.children)):
-            ident_loop, count, block = t.children[i].children
-            for i in range(int(count)):
-                self.run_instruction(block)
+            child = t.children[i]
+            if (isinstance(child, Tree)):
+                child2 = child.children[0]
+                for k in range(count):
+                    self.run_code_block(child2)
+            else:
+                count = int(child)
+                print("NUMBER")
 
     def run_clear(self, t):
         print("func clear")
     
     def run_function(self, t):
         print("func function")
+        print(t)
         self.run_code_block(t)
 
     def run_assign(self, t):
