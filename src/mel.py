@@ -49,11 +49,13 @@ class MEL():
                 self.run_custom_color(inst)
         
         elif t.data == 'custom_background':
-            print("func custom_background")
+            for inst in t.children:
+                self.run_custom_background(inst)
         
     def run_code_block(self, t):
         print("func code_block")
-        self.run_instruction(t.children[0])
+        for inst in t.children:
+            self.run_instruction(inst)
     
     def run_loop(self, t):
         print("func run_loop")
@@ -80,6 +82,13 @@ class MEL():
             print("number")
     
     def run_custom_color(self, t):
+        for inst in t.children:
+            if isinstance(inst, Tree) and inst.data == 'rgb':
+                print("func rgb")
+            else:
+                print("color")
+    
+    def run_custom_background(self, t):
         for inst in t.children:
             if isinstance(inst, Tree) and inst.data == 'rgb':
                 print("func rgb")
