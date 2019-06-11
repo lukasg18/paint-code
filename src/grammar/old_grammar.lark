@@ -1,26 +1,31 @@
 start: instruction
 
-instruction: action                 ->action
+instruction: action (";" expr)*     ->action
+            |code_block             ->code_block
             |loop                   ->loop
+            |clear                  ->clear
             |function               ->function
             |assign                 ->assign
+
+expr: action 
+      |code_block 
+      |assign
 
 action: movement                ->movement
         |custom_color           -> custom_color
         |custom_background      -> custom_background
-        |clear                  ->clear
         
 movement: "move" (DIRECTION (NUMBER|NAME))+ 
 custom_color: "color" (COLOR | rgb)            
 custom_background: "bg" (COLOR | rgb)
 rgb: "rgb" ("0".."9")~1..3 " " ("0".."9")~1..3 " " ("0".."9")~1..3
-loop: "repeat" NUMBER action (";" action)*
+loop: "repeat" NUMBER code_block
+code_block: "{" instruction+ "}"
 assign: "const" NAME "=" (NUMBER 
         |custom_color
         |lambda)
 lambda: "lambda" code_block -> lambda
-function: "def" NAME "(" (args)* ")" instruction
-args: NAME ("," NAME)* 
+function: "def" NAME "(" (NAME ("," NAME)* )* ")" code_block
 clear: "clear"
 
 COLOR: "red" | "green" | "blue" | "white" | "black"
