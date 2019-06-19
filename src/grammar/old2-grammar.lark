@@ -1,0 +1,30 @@
+start: instruction
+
+instruction: action                 ->action
+            |loop                   ->loop
+            |function               ->function
+            |assign                 ->assign
+
+action: movement                ->movement
+        |custom_color           -> custom_color
+        |custom_background      -> custom_background
+        |clear                  ->clear
+        
+movement: "move" (DIRECTION (NUMBER|NAME))+ 
+custom_color: "color" (COLOR | rgb)            
+custom_background: "bg" (COLOR | rgb)
+rgb: "rgb" ("0".."9")~1..3 " " ("0".."9")~1..3 " " ("0".."9")~1..3
+loop: "repeat" NUMBER action (";" action)*
+assign: "const" NAME "=" (NUMBER 
+        |custom_color)
+function: "def" NAME "(" (args)* ")" instruction
+args: NAME ("," NAME)* 
+clear: "clear"
+
+COLOR: "red" | "green" | "blue" | "white" | "black"
+DIRECTION: "f"|"b"|"l"|"r"
+NUMBER: ("0".."9")+
+NAME: ("a".."z")+
+
+%import common.WS_INLINE
+%ignore WS_INLINE
