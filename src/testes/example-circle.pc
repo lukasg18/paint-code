@@ -1,0 +1,8 @@
+bg black
+color rgb 255 185 053
+var fnum = 70
+var count = 55
+var rnum = 31
+begin-fill
+repeat count { move f fnum r rnum }
+end-fill

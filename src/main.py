@@ -17,15 +17,17 @@ def rpl():
             PaintCode().parser(expr)
 
 
-def main(argv):
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--file", help="input file")
     args = parser.parse_args() 
+    paintCode = PaintCode()
     
     if args.file:
       file = open(args.file, 'r')
       for line in file:
-        print("line: " + line)
+        paintCode.parser(line.strip())
+      input('\nPress any key to exit\n')
     else:
       rpl()
     

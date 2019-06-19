@@ -1,0 +1,6 @@
+bg black
+color rgb 255 185 053
+begin-fill
+repeat 4 { move f 100 r 90 }
+color red
+end-fill
