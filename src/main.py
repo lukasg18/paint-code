@@ -1,4 +1,4 @@
-from mel import MEL
+from paint_code import PaintCode
 import argparse
 
 
@@ -10,11 +10,11 @@ except NameError:
 def rpl():
     while True:
         # ignorando espacos
-        expr: str = input('insira a expressao -> ')
+        expr = input('insira a expressao -> ')
         if len(expr) == 0:
             print("Favor inserir uma expressao")
         else:
-            MEL().parser(expr)
+            PaintCode().parser(expr)
 
 
 def main(argv):
@@ -23,9 +23,11 @@ def main(argv):
     args = parser.parse_args() 
     
     if args.file:
-        print("Abrir arquivo e executar no Lark")
+      file = open(args.file, 'r')
+      for line in file:
+        print("line: " + line)
     else:
-        rpl()
+      rpl()
     
     return 0
 

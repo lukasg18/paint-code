@@ -3,7 +3,7 @@ import turtle
 
 variables = {}
 
-class MEL():
+class PaintCode():
     def __init__(self):
         self._grammar = Lark(open('grammar/new-grammar.lark'))
     
