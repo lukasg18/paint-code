@@ -4,4 +4,4 @@ move f 100 r 90 f 100 r 90 f 100 r 90 f 100 r 90
 end-fill
 
 repeat 4 {move f 100 r 90}
-repeat 30 {bg red; move f 100; bg black; move r 90; bg white}
+repeat 30 {bg red; move f 100; bg blue; move r 90; bg white}
