@@ -2,6 +2,7 @@ from lark import Lark, Tree
 import turtle
 
 variables = {}
+functions = {}
 
 class PaintCode():
     def __init__(self):
@@ -10,6 +11,10 @@ class PaintCode():
     def _isValidVariable(self, key):
         if (not key in variables.keys()):
             raise Exception('Variable "'+key+'" not defined')
+    
+    def _isValidFunction(self, key):
+        if (not key in functions.keys()):
+            raise Exception('Function "'+key+'" not defined')
     
     def _getRGB(self, children):
         color = {'r': '', 'g': '', 'b': ''}
@@ -42,6 +47,7 @@ class PaintCode():
                 self.run_instruction(inst)
             print("expressao aceita: ", parse_tree) 
             print("variables: ", variables)
+            print("functions: ", functions)
         except Exception as e:
             print(e)
 
@@ -53,6 +59,10 @@ class PaintCode():
         elif t.data == 'assign':
             for inst in t.children:
                 self.run_assign(inst)
+
+        elif t.data == 'assign_function':
+            for inst in t.children:
+                self.run_assign_function(inst)
         
         elif t.data == 'loop':
             for inst in t.children:
@@ -83,10 +93,19 @@ class PaintCode():
             for inst in t.children:
                 self.run_fill(inst)
 
+        elif t.data == 'call_function':
+            for inst in t.children:
+                self.run_call_function(inst)
+
     def run_assign(self, t):
         name = t.children[0].value
         value = t.children[1].value
         variables[name] = int(value)
+
+    def run_assign_function(self, t):
+        name = t.children[0].value
+        value = t.children[1]
+        functions[name] = value
     
     def run_fill(self, t):
         for child in t.children:
@@ -94,6 +113,11 @@ class PaintCode():
                 turtle.begin_fill()
             elif(child.type == 'ENDFILL'):
                 turtle.end_fill()
+    
+    def run_call_function(self, t):
+        name = t.children[0].value
+        self._isValidFunction(name)
+        self.run_code_block(functions[name])
 
     def run_loop(self, t):
         number = 0
