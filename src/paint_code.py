@@ -141,6 +141,7 @@ class PaintCode():
     def run_custom_background(self, t):
         for inst in t.children:
             if isinstance(inst, Tree) and inst.data == 'rgb':
+                turtle.colormode(255)
                 r,g,b = self._getRGB(inst.children)
                 turtle.bgcolor(r,g,b)
             else:
