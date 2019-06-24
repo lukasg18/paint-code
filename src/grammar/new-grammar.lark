@@ -23,7 +23,7 @@ rgb: "rgb" (("0".."9")~3 | variable) " " (("0".."9")~3 | variable) " " (("0".."9
 clear: "clear"
 reset: "reset"
 assign: "var" NAME "=" NUMBER
-assign_function: "def" NAME code_block
+assign_function: "def" NAME "{" instruction (";" instruction)* "}"
 variable: NAME
 call_function: NAME "(" ")"
 loop: "repeat" (NUMBER | variable) code_block

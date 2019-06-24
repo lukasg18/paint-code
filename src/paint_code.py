@@ -104,7 +104,7 @@ class PaintCode():
 
     def run_assign_function(self, t):
         name = t.children[0].value
-        value = t.children[1]
+        value = t.children[1:]
         functions[name] = value
     
     def run_fill(self, t):
@@ -117,7 +117,8 @@ class PaintCode():
     def run_call_function(self, t):
         name = t.children[0].value
         self._isValidFunction(name)
-        self.run_code_block(functions[name])
+        for inst in functions[name]:
+            self.run_instruction(inst)
 
     def run_loop(self, t):
         number = 0
