@@ -7,6 +7,7 @@ functions = {}
 class PaintCode():
     def __init__(self):
         self._grammar = Lark(open('grammar/new-grammar.lark'))
+        # turtle.speed(0)
     
     def _isValidVariable(self, key):
         if (not key in variables.keys()):
@@ -67,6 +68,10 @@ class PaintCode():
         elif t.data == 'loop':
             for inst in t.children:
                 self.run_loop(inst)
+        
+        elif t.data == 'if':
+            for inst in t.children:
+                self.run_if(inst)
     
     def run_action(self, t):
         if t.data == 'movement':
@@ -132,6 +137,36 @@ class PaintCode():
                     self.run_code_block(child)
             elif(child.type == 'NUMBER'):
                 number = int(child.value)
+    
+    def _getValueVarOrNumber(self, val):
+        if (isinstance(val, Tree)):
+            return variables[val.children[0].value]
+        return int(val.value)
+
+    def run_if(self, t):
+        val1 = self._getValueVarOrNumber(t.children[0])
+        cond = t.children[1].value
+        val2 = self._getValueVarOrNumber(t.children[2])
+        print("val1: ", val1)
+        print("val2: ", val2)
+        instructions = t.children[3:]
+        canRun = False
+        if (cond == '>'):
+            canRun = val1 > val2
+        elif (cond == '>='):
+            canRun = val1 >= val2
+        elif (cond == '<'):
+            canRun = val1 < val2
+        elif (cond == '<='):
+            canRun = val1 <= val2
+        elif (cond == '=='):
+            canRun = val1 == val2
+        elif (cond == '!='):
+            canRun = val1 != val2
+        
+        if canRun:
+            for inst in instructions:
+                self.run_instruction(inst)
 
     def run_code_block(self, t):
         print(t)
