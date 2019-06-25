@@ -2,12 +2,19 @@
 Implementação de um parser descendente recursivo para uma Linguagem Livre de Contexto, chamada de MEL.
 
 ### Informações gerais
-- **Autor**: Lucas Gomes Flegler
+- **Autores**: David P. Vilaça, Lucas Gomes Flegler, Tadeu P. M. Junior
 - **Linguagem de programação**: Python (versão 3.6.5)
 - **Ambiente de desenvolvimento**: Visual Studio Code (versão 1.33.1)
 
 #### Sobre o Lark
 Lark é um analisador de gramática livre de contexto. Segundo sua documentação, ele pode analisar qualquer gramática que você lançar nele, não importa o quão complicado ou ambíguo, e fazê-lo de forma eficiente.
+
+#### Sobre o Turtle
+Turtle é um módulo Python que oferece funcionalidades para fazermos desenhos na tela, com comandos muito simples. Esse módulo segue a idéia da linguagem de programação Logo, que é muito utilizada em escolas como apoio ao ensino de disciplinas regulares e também para introdução a programação para crianças. A linguagem Logo segue a ideia de um robô que o usuário pode controlar através de comandos simples de movimentação.
+
+#### PaintCode DSL
+Este trabalho consiste na implementação de uma Linguagem de Domínio Específico para trabalhar com o módulo Turtle.
+O PaintCode permite o desenvolvedor criar desenhos através de códigos. 
 
 ### Descrição geral do código fonte
 O código fonte está estruturado da seguinte maneira:
@@ -15,17 +22,74 @@ O código fonte está estruturado da seguinte maneira:
 ```
 src
 |_ main.py
-|_ mel.py
-|_ trab2.sh
+|_ paint_code.py
+|_ paint-code.sh
 |_ grammar
    |_ grammar.lark
 |_ testes
-   |_ testes.txt
+   |_ example-circle.pc
+   |_ example-frac.pc
+   |_ example-square.pc
+   |_ example_star.pc
+
 ```
+#### grammar.lark
+O arquivo grammar.lark contém a gramática escrita no formato EBNF, posteriomente interpretada pela biblioteca `Lark`.
 
 
-#### mel.py
-É um módulo que contém uma classe única chamada `MEL`, que tem por responsabilidade manipular as expressões matemáticas e encontrar o seu resultado.<br>
+```TypeScript
+start: instruction
+
+instruction: action                 -> action
+            |assign                 -> assign
+            |assign_function        -> assign_function
+            |loop                   -> loop
+            |if                     -> if
+
+
+            
+action: movement                -> movement
+        |custom_color           -> custom_color
+        |custom_background      -> custom_background
+        |clear                  -> clear
+        |reset                  -> reset
+        |fill                   -> fill
+        |call_function          -> call_function
+
+assign: "var" NAME "=" NUMBER
+assign_function: "def" NAME "{" instruction (";" instruction)* "}"
+loop: "repeat" (NUMBER | variable) code_block
+if: "if" (NUMBER|variable) CONDITION (NUMBER|variable) "{" 
+
+movement: "move" (DIRECTION (NUMBER | variable))+
+custom_color: "color" (COLOR | rgb)  
+custom_background: "bg" (COLOR | rgb)
+clear: "clear"
+reset: "reset"
+fill: BEGINFILL | ENDFILL  
+call_function: NAME "(" ")"         
+
+rgb: "rgb" (("0".."9")~3 | variable) " " (("0".."9")~3 | variable) " " (("0".."9")~3 | variable)
+variable: NAME
+code_block: "{" action (";" action)* "}"
+instruction (";" instruction)* "}"
+
+COLOR: "red" | "green" | "blue" | "white" | "black"
+DIRECTION: "f"|"b"|"l"|"r"
+NUMBER: ("0".."9")+
+NAME: ("a".."z")+
+BEGINFILL: "begin-fill"
+ENDFILL: "end-fill"
+CONDITION: ">=" | "<=" | "!=" | "==" | ">" | "<"
+
+%import common.WS_INLINE
+%ignore WS_INLINE
+```
+Esta gramática se encontra dentro do diretório `grammar` com o nome `grammar.lark`. A extensão de arquivo `.lark` é unica da biblioteca, somente arquivos com esta extensão são analisadas e interpretadas.
+
+
+#### paint_code.py
+É um módulo que contém uma classe única chamada `paint_code`, com a responsabilidade de manipular as instruções de desenho e .<br>
 A seguir apresentarei algumas explicações sobre a funcionalidade da biblioteca.
 ##### Função Lark
 Responsável por analisar e interpretar a gramática livre de contexto desenvolvida. Mostrado no trecho de código abaixo:
@@ -44,50 +108,54 @@ def parser(self, expression):
             print("expressao invalida")
 ```
 
-#### grammar.lark
-O método `parser` depois de executado, irá retornar uma árvore contendo o resultado da expressao, seguindo as regras de produção definidas para a gramática que é mostrada logo abaixo.
-
-```html
-<expr>   ::= <term> ((‘+’ | ‘-’) <term>)*
-<term>   ::= <factor> ((‘*’ | ‘/’ | ‘//’ | ‘%’) <factor>)*
-<factor> ::= <base> (‘^’ <factor>)?
-<base>   ::= (‘+’ |‘-’) <base>
-           | NUMBER
-           |  ‘(’ <expr> ‘)’
-
-%import common.SIGNED_NUMBER -> NUMBER
-%import common.WS_INLINE
-%ignore WS_INLINE
-```
-Esta gramática se encontra dentro do diretório `grammar` com o nome `grammar.lark`. A extensão de arquivo `.lark` é unica da biblioteca, somente arquivos com esta extensão são analisadas e interpretadas.
 
 #### main.py
-É o módulo principal do programa, que tem como objetivo lê a expressão digitada pelo usuário e passar a informação lida para o método `parser`.  Veja o trecho a seguir:
+É o módulo principal do programa, que tem como objetivo lê a expressão digitada ou um arquivo com a extensão `.pc` e posteriomente envia para o arquivo `paint_code.py`. Segue o código abaixo:
 
 ```python
-from mel import MEL
+from paint_code import PaintCode
+import argparse
+
 
 try:
     input = raw_input
 except NameError:
     pass
 
-def main():
+def rpl():
     while True:
         # ignorando espacos
-        expr: str = input('> ')
+        expr = input('insira a expressao -> ')
         if len(expr) == 0:
             print("Favor inserir uma expressao")
         else:
-            MEL().parser(expr)
+            PaintCode().parser(expr)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--file", help="input file")
+    args = parser.parse_args() 
+    paintCode = PaintCode()
+    
+    if args.file:
+      file = open(args.file, 'r')
+      for line in file:
+        paintCode.parser(line.strip())
+      input('\nPress any key to exit\n')
+    else:
+      rpl()
+    
+    return 0
 
 if __name__ == '__main__':
     main()
 ```
-Caso a entrada seja vazia, é emitido uma mensagem no console para que tenha pelo menos uma  expressão inserida.
+ 
+
 
 ### Como executar?
-Para execução do projeto é recomendado utilizar uma máquina virtual do python mas não é obrigatório para o funcionamento do código.<br>
+Para execução do projeto é recomendado utilizar uma máquina virtual do python, mas não é obrigatório para o funcionamento do código.<br>
 Dentro do diretorio `/src` existe um script básico para execução do programa. O comando abaixo mostra como executar.
 
 ```shell
@@ -112,10 +180,16 @@ pip install lark-parser
 
 * Entre no diretório "src/"
 
-* Insira o comando para executar o código:
-```bash
+* Para inserir um expressão execute o comando:
+```shell 
 python main.py
 ```
+* Após executar o comando acima a seguinte mensagem aparcerá no console:
+```shell
+insira a expressão -> |
+ ```  
+* Para executar arquivos com a extensão `.pc`,
+
 
 ### Testes
 Para testes, foi criado um arquivo de testes chamado `testes.txt`, que fica dentro do diretório `/src/testes`. Esse arquivo contém algumas expressões que foram usadas para teste da gramática. Dentre eles, temos:
