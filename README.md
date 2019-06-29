@@ -56,23 +56,20 @@ action: movement                -> movement
         |fill                   -> fill
         |call_function          -> call_function
 
-assign: "var" NAME "=" NUMBER
-assign_function: "def" NAME "{" instruction (";" instruction)* "}"
-loop: "repeat" (NUMBER | variable) code_block
-if: "if" (NUMBER|variable) CONDITION (NUMBER|variable) "{" 
-
-movement: "move" (DIRECTION (NUMBER | variable))+
-custom_color: "color" (COLOR | rgb)  
+movement: "move" (DIRECTION (NUMBER | variable))+ 
+fill: BEGINFILL | ENDFILL  
+custom_color: "color" (COLOR | rgb)            
 custom_background: "bg" (COLOR | rgb)
+rgb: "rgb" (("0".."9")~3 | variable) " " (("0".."9")~3 | variable) " " (("0".."9")~3 | variable)
 clear: "clear"
 reset: "reset"
-fill: BEGINFILL | ENDFILL  
-call_function: NAME "(" ")"         
-
-rgb: "rgb" (("0".."9")~3 | variable) " " (("0".."9")~3 | variable) " " (("0".."9")~3 | variable)
+assign: "var" NAME "=" NUMBER
+assign_function: "def" NAME "{" instruction (";" instruction)* "}"
 variable: NAME
+call_function: NAME "(" ")"
+loop: "repeat" (NUMBER | variable) code_block
 code_block: "{" action (";" action)* "}"
-instruction (";" instruction)* "}"
+if: "if" (NUMBER|variable) CONDITION (NUMBER|variable) "{" instruction (";" instruction)* "}"
 
 COLOR: "red" | "green" | "blue" | "white" | "black"
 DIRECTION: "f"|"b"|"l"|"r"
