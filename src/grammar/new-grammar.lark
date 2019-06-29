@@ -5,7 +5,6 @@ instruction: action                 -> action
             |assign_function        -> assign_function
             |loop                   -> loop
             |if                     -> if
-            |tree                   -> tree
 
 
             
