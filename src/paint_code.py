@@ -1,4 +1,4 @@
-from lark import Lark, Tree
+from lark import Lark, Tree, tree
 import turtle
 
 variables = {}
@@ -72,6 +72,10 @@ class PaintCode():
         elif t.data == 'if':
             for inst in t.children:
                 self.run_if(inst)
+        
+        elif t.data == 'tree':
+            for inst in t.children:
+                self.run_tree(inst)
     
     def run_action(self, t):
         if t.data == 'movement':
@@ -101,6 +105,17 @@ class PaintCode():
         elif t.data == 'call_function':
             for inst in t.children:
                 self.run_call_function(inst)
+        
+        elif t.data == 'speed':
+            for inst in t.children:
+                self.run_speed(inst)
+
+    def run_tree(self, t):
+        tree.pydot__tree_to_png( t, 'saida.png')
+
+    def run_speed(self, t):
+        number = int(t.children[0].value)
+        turtle.speed(number)
 
     def run_assign(self, t):
         name = t.children[0].value
