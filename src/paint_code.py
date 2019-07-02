@@ -101,6 +101,14 @@ class PaintCode():
         elif t.data == 'call_function':
             for inst in t.children:
                 self.run_call_function(inst)
+        
+        elif t.data == 'speed':
+            for inst in t.children:
+                self.run_speed(inst)
+
+    def run_speed(self, t):
+        number = int(t.children[0].value)
+        turtle.speed(number)
 
     def run_assign(self, t):
         name = t.children[0].value

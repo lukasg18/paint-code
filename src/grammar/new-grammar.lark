@@ -15,7 +15,9 @@ action: movement                -> movement
         |reset                  -> reset
         |fill                   -> fill
         |call_function          -> call_function
+        |speed                  ->speed
 
+speed: "speed" NUMBER
 movement: "move" (DIRECTION (NUMBER | variable))+ 
 fill: BEGINFILL | ENDFILL  
 custom_color: "color" (COLOR | rgb)            
@@ -25,6 +27,7 @@ clear: "clear"
 reset: "reset"
 assign: "var" NAME "=" NUMBER
 assign_function: "def" NAME "{" instruction (";" instruction)* "}"
+tree: "tree" "{" instruction (";" instruction)* "}"
 variable: NAME
 call_function: NAME "(" ")"
 loop: "repeat" (NUMBER | variable) code_block
