@@ -1,22 +1,22 @@
 
 var x = 10
-def square {color rgb 000 000 000; repeat 4 { move f 100 r 90 } }
+def square {color rgb 000 000 000; repeat 4 { move f 200 r 90 } }
 
-if x < 20 { color red }
+if x < 20 { color blue }
 if x < 5 { color black }
 begin-fill
 square()
 end-fill
 
-move f 100
+move f 200
 color rgb 255 255 255
-move f 100
+move f 200
 
-if x == 10 { color blue }
+if x == 10 { color red }
 begin-fill
 square()
 end-fill
 
 color rgb 000 000 000
-move f 100 r 90 f 100 r 90 f 300 r 90 f 100 r 90 f 300
+move f 200 r 90 f 200 r 90 f 600 r 90 f 200 r 90 f 600
 
