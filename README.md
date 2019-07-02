@@ -1,5 +1,5 @@
 # LFA-Parser
-Implementação de um parser descendente recursivo para uma Linguagem Livre de Contexto, chamada de MEL.
+Implementação de uma Linguagem de Domínio Específico (DSL), chamada PaintCode, utilizando a ferramenta voltada para o parse de qualquer gramática livre de contexto chamada Lark.
 
 ### Informações gerais
 - **Autores**: David P. Vilaça, Lucas Gomes Flegler, Tadeu P. M. Junior
@@ -23,7 +23,7 @@ O código fonte está estruturado da seguinte maneira:
 src
 |_ main.py
 |_ paint_code.py
-|_ paint-code.sh
+|_ paint_code.sh
 |_ grammar
    |_ grammar.lark
 |_ testes
