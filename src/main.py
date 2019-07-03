@@ -27,7 +27,7 @@ def main():
       file = open(args.file, 'r')
       for line in file:
         paintCode.parser(line.strip())
-      input('\nPress any key to exit\n')
+      input('\nPress enter to exit\n')
     else:
       rpl()
     
