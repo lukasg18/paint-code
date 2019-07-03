@@ -55,24 +55,24 @@ action: movement                -> movement
         |reset                  -> reset
         |fill                   -> fill
         |call_function          -> call_function
+        |speed                  -> speed
 
-assign: "var" NAME "=" NUMBER
-assign_function: "def" NAME "{" instruction (";" instruction)* "}"
-loop: "repeat" (NUMBER | variable) code_block
-if: "if" (NUMBER|variable) CONDITION (NUMBER|variable) "{" 
 
-movement: "move" (DIRECTION (NUMBER | variable))+
-custom_color: "color" (COLOR | rgb)  
+speed: "speed" NUMBER
+movement: "move" (DIRECTION (NUMBER | variable))+ 
+fill: BEGINFILL | ENDFILL  
+custom_color: "color" (COLOR | rgb)            
 custom_background: "bg" (COLOR | rgb)
+rgb: "rgb" (("0".."9")~3 | variable) " " (("0".."9")~3 | variable) " " (("0".."9")~3 | variable)
 clear: "clear"
 reset: "reset"
-fill: BEGINFILL | ENDFILL  
-call_function: NAME "(" ")"         
-
-rgb: "rgb" (("0".."9")~3 | variable) " " (("0".."9")~3 | variable) " " (("0".."9")~3 | variable)
+assign: "var" NAME "=" NUMBER
+assign_function: "def" NAME "{" instruction (";" instruction)* "}"
 variable: NAME
+call_function: NAME "(" ")"
+loop: "repeat" (NUMBER | variable) code_block
 code_block: "{" action (";" action)* "}"
-instruction (";" instruction)* "}"
+if: "if" (NUMBER|variable) CONDITION (NUMBER|variable) "{" instruction (";" instruction)* "}"
 
 COLOR: "red" | "green" | "blue" | "white" | "black"
 DIRECTION: "f"|"b"|"l"|"r"
@@ -84,6 +84,7 @@ CONDITION: ">=" | "<=" | "!=" | "==" | ">" | "<"
 
 %import common.WS_INLINE
 %ignore WS_INLINE
+
 ```
 Esta gramática se encontra dentro do diretório `grammar` com o nome `grammar.lark`. A extensão de arquivo `.lark` é unica da biblioteca, somente arquivos com esta extensão são analisadas e interpretadas.
 
@@ -155,11 +156,12 @@ if __name__ == '__main__':
 
 
 ### Como executar?
-Para execução do projeto é recomendado utilizar uma máquina virtual do python, mas não é obrigatório para o funcionamento do código.<br>
-Dentro do diretorio `/src` existe um script básico para execução do programa. O comando abaixo mostra como executar.
+Para execução do projeto é recomendado utilizar uma máquina virtual do python, mas não é obrigatório para o funcionamento da linguagem.<br>
+Dentro do diretório “/src” existe um script básico para execução do programa. O comando abaixo mostra como executar.
+
 
 ```shell
-source ./trab2.sh
+source ./paint_code.sh
 ```
 Caso o script falhe, os comandos a seguir mostram como executar o projeto.
 
@@ -178,9 +180,13 @@ source venv/bin/activate
 pip install lark-parser
 ```
 
-* Entre no diretório "src/"
 
-* Para inserir um expressão execute o comando:
+### Testando a linguagem
+
+O código do PaintCode pode ser executado de duas maneiras diferentes, executando o arquivo main.py manualmente(esta opção o programador fica livre para escrever seu código) ou informando um arquivo com a extensão do PaintCode “arquivo.pc”. 
+
+#### Teste manual
+Insira o comando abaixo dentro do diretório /src.
 ```shell 
 python main.py
 ```
@@ -188,31 +194,17 @@ python main.py
 ```shell
 insira a expressão -> |
  ```  
-* Para executar arquivos com a extensão `.pc`,
 
+#### Teste com arquivos
 
-### Testes
-Para testes, foi criado um arquivo de testes chamado `testes.txt`, que fica dentro do diretório `/src/testes`. Esse arquivo contém algumas expressões que foram usadas para teste da gramática. Dentre eles, temos:
-```txt
-((2+2)*2)-((2-0)+2)
-(10*5)+(100/10)-5+(7%(2^2))
-10 * 5 + 100 / 10 - 5 + 7 % 2
-(-2.3)^2 + 2.2E1 * 2e1-12 + 1e1+3
-(-2.3)^2 + 2.2E1 * 2e1-12 + (1e1+3) % 2
-2e5 + 3
-(2.*(2.0+2.))-(2.0+(2.-0))
-2^2^2^-2
--2^2
--(2^2)
-...
-```
+Todos os arquivos com extensão “.pc” se encontram no diretório “testes/”. Para executar estes arquivos, insira o comando abaixo:
+
+```shell
+python main.py --file testes/example-frac2.pc
+ ```  
 
 ### Informações adicionais
-Todo o código fonte está hospedado no [GitHub](https://github.com/lukasg18/LFA-PARSER-LARK).<br>
-Para mais informações a respeito da biblioteca lark, segue abaixo uma imagem resumida sobre funções da biblioteca.<br>
-<figure>
-<img src="https://raw.githubusercontent.com/lukasg18/lfa-dsl/dev/dsl_images/download.png" width="80%" height="80%" style="display: block; margin-left: auto; margin-right: auto;">
-</figure>
+Todo o código fonte está hospedado no [GitHub](https://github.com/lukasg18/paint-code).<br>
 
 #### Referências
 https://lark-parser.readthedocs.io/en/latest/
