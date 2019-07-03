@@ -1,4 +1,5 @@
-# LFA-Parser
+# Trabalho Final de LFA 2019/1 - Implementação de uma Linguagem de Domínio Específico (DSL)
+
 Implementação de uma Linguagem de Domínio Específico (DSL), chamada PaintCode, utilizando a ferramenta voltada para o parse de qualquer gramática livre de contexto chamada Lark.
 
 ### Informações gerais
@@ -195,6 +196,10 @@ python main.py
 insira a expressão -> |
  ```  
 
+**OBS:** Para desativar o virtual env:
+```shell
+   $deactivate
+ ```  
 #### Teste com arquivos
 
 Todos os arquivos com extensão “.pc” se encontram no diretório “testes/”. Para executar estes arquivos, insira o comando abaixo:
