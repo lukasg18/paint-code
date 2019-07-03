@@ -197,8 +197,8 @@ insira a expressão -> |
  ```  
 
 **OBS:** Para desativar o virtual env:
-```shell
-   $deactivate
+```bash
+   $ deactivate
  ```  
 #### Teste com arquivos
 
