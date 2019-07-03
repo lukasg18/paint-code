@@ -7,7 +7,6 @@ functions = {}
 class PaintCode():
     def __init__(self):
         self._grammar = Lark(open('grammar/grammar.lark'))
-        # turtle.speed(0)
     
     def _isValidVariable(self, key):
         if (not key in variables.keys()):
