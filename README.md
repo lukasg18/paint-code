@@ -30,6 +30,8 @@ src
 |_ testes
    |_ example-circle.pc
    |_ example-frac.pc
+   |_ example-frac2.pc
+   |_ example-if.pc
    |_ example-square.pc
    |_ example_star.pc
 
